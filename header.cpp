@@ -1,14 +1,8 @@
 #include "header.h"
-echo "# TetrisClone" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git remote add origin https://github.com/esjastad/TetrisClone.git
-git push -u origin master
 
 data::data()
 {
-
+    srand(time(NULL));
     gen = rand()%7+1;
     L = 340;
     R = 640;

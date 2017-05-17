@@ -99,5 +99,15 @@ int main()
         window.display();
     }
 
+    for (int i = 0; i < counter; ++i)
+    {
+        if (head)
+        {
+            temp = head->next;
+            delete head;
+            head = temp;
+        }
+    }
+
     return 0;
 }
