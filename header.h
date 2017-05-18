@@ -7,6 +7,25 @@
 #include <time.h>
 #include <cctype>
 #include <cstring>
+#include <sstream>
+
+class textmaker
+{
+public:
+    textmaker();
+    sf::Text levelt;
+    sf::Text scoret;
+    void valuechange(bool flag);
+    int level;  //1-10;
+    float speed;  //really a time interval
+    int score;  //50000
+    int prevscore;
+
+private:
+    sf::Font font;
+
+
+};
 
 class background
 {
@@ -46,8 +65,8 @@ class TileMap : public sf::Drawable, public sf::Transformable
 public:
     bool reset= false;
     bool isempty(sf::Vector2u tileSize, int* tiles, unsigned int width, unsigned int height, node * current, char direction);
-    void stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game, sf::Sound sound, sf::SoundBuffer soundstamp);
-    void tetris(int tiles[], unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game, sf::Sound sound, sf::SoundBuffer soundtetris);
+    void stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game, sf::Sound sound, sf::SoundBuffer soundstamp, textmaker & mytext);
+    void tetris(int tiles[], unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game, sf::Sound sound, sf::SoundBuffer soundtetris, textmaker & mytext);
     bool load(const std::string& tileset, sf::Vector2u tileSize, int* tiles, unsigned int width, unsigned int height)
     {
         // load the tileset texture
@@ -106,4 +125,5 @@ private:
     sf::Texture m_tileset;
 
 };
+
 

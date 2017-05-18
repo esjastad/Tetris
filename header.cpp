@@ -1,5 +1,49 @@
 #include "header.h"
 
+textmaker::textmaker()
+{
+    font.loadFromFile("arial.ttf");
+    levelt.setFont(font);
+    levelt.setString("1");
+    levelt.setCharacterSize(40);
+    levelt.setColor(sf::Color::White);
+    levelt.setStyle(sf::Text::Bold);
+    levelt.setOrigin((levelt.getLocalBounds().width/2),(levelt.getLocalBounds().height/2));
+
+    scoret.setFont(font);
+    scoret.setString("0");
+    scoret.setCharacterSize(40);
+    scoret.setColor(sf::Color::White);
+    scoret.setStyle(sf::Text::Bold);
+    scoret.setOrigin((scoret.getLocalBounds().width/2),(scoret.getLocalBounds().height/2));
+
+    score = 0;
+    level = 1;
+    speed = (1.50/level);
+    prevscore = 0;
+}
+
+void textmaker::valuechange(bool flag)
+{
+    std::stringstream ss;
+    if (flag == true)
+    {
+        ss << score;
+        scoret.setString(ss.str());
+        scoret.setOrigin((scoret.getLocalBounds().width/2),(scoret.getLocalBounds().height/2));
+        scoret.setPosition(850,350);
+    }
+    else
+    {
+        prevscore = score;
+        ss << level;
+        levelt.setString(ss.str());
+        levelt.setOrigin((levelt.getLocalBounds().width/2),(levelt.getLocalBounds().height/2));
+        levelt.setPosition(850,490);
+        speed = 1.50/level;
+    }
+}
+
 background::background()
 {
     borderTexture.loadFromFile("borders.png");
@@ -376,7 +420,7 @@ bool TileMap::isempty(sf::Vector2u tileSize, int* tiles, unsigned int width, uns
     return temp;
 }
 
-void TileMap::stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game, sf::Sound sound, sf::SoundBuffer soundstamp)
+void TileMap::stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game, sf::Sound sound, sf::SoundBuffer soundstamp, textmaker & mytext)
 {
     sf::Vector2f holder;
 
@@ -411,6 +455,13 @@ void TileMap::stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned
 
     if (reset)
     {
+        mytext.score = 0;
+        mytext.level = 1;
+        mytext.speed = (1.50/mytext.level);
+        mytext.prevscore = 0;
+        mytext.valuechange(true);
+        mytext.valuechange(false);
+
         sound.setBuffer(soundstamp);
         for (int i = height-1; i > -1; --i)
         {
@@ -475,7 +526,7 @@ void TileMap::stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned
     }
 }
 
-void TileMap::tetris(int tiles[], unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game, sf::Sound sound, sf::SoundBuffer soundtetris)
+void TileMap::tetris(int tiles[], unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game, sf::Sound sound, sf::SoundBuffer soundtetris, textmaker & mytext)
 {
     bool eraser = true;
     bool reassign = false;
@@ -498,6 +549,10 @@ void TileMap::tetris(int tiles[], unsigned int width, unsigned int height, sf::C
             {
                 location[repetitions] = i;
                 ++repetitions;
+                mytext.score = mytext.score + 1000;
+                if (repetitions == 4)
+                    mytext.score = mytext.score + 2000;
+
                 reassign = true;
             }
         eraser = true;
@@ -512,6 +567,7 @@ void TileMap::tetris(int tiles[], unsigned int width, unsigned int height, sf::C
 
     if (repetitions)
     {
+        mytext.valuechange(true);
         sound.play();
                 while ( elapsed1.asSeconds() < 0.5  && window.isOpen())
                 {
@@ -565,6 +621,8 @@ void TileMap::tetris(int tiles[], unsigned int width, unsigned int height, sf::C
                     {
                         window.draw(temp->data.block[i]);
                     }
+                    window.draw(mytext.scoret);
+                    window.draw(mytext.levelt);
                     window.draw(game.border);
                     window.display();
                 }
