@@ -18,17 +18,17 @@ private:
 
 };
 
-class shape
+class shape : public sf::Transformable
 {
 public:
     sf::Sprite block[4];
     shape();
     bool movement(sf::Vector2f destination, char temp);
     void rotater();
-
+    int gen;
+    sf::Transform former;
 private:
     sf::Texture blockTexture;
-    int gen;
     sf::Vector2f position;
     int flag;
     int color;
@@ -46,8 +46,8 @@ class TileMap : public sf::Drawable, public sf::Transformable
 public:
     bool reset= false;
     bool isempty(sf::Vector2u tileSize, int* tiles, unsigned int width, unsigned int height, node * current, char direction);
-    void stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game);
-    void tetris(int tiles[], unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game);
+    void stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game, sf::Sound sound, sf::SoundBuffer soundstamp);
+    void tetris(int tiles[], unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game, sf::Sound sound, sf::SoundBuffer soundtetris);
     bool load(const std::string& tileset, sf::Vector2u tileSize, int* tiles, unsigned int width, unsigned int height)
     {
         // load the tileset texture

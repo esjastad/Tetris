@@ -38,14 +38,38 @@ int main()
     current->next = new node;
     node * temp = current->next;
 
-    temp->data.movement(sf::Vector2f(350,190),'s');
+    if (temp->data.gen == 2)
+    {
+        temp->data.movement(sf::Vector2f(350,160),'s');
+    }
+    else if (temp->data.gen == 1)
+    {
+        temp->data.former.scale(0.8f,0.8f);
+        temp->data.former.translate(235,60);
+        temp->data.movement(sf::Vector2f(350,190),'s');
+    }
+    else
+        temp->data.movement(sf::Vector2f(350,190),'s');
 
 
+    sf::SoundBuffer soundtetris;
+    soundtetris.loadFromFile("tetris.wav");
+
+    sf::SoundBuffer soundstamp;
+    soundstamp.loadFromFile("stamp.wav");
+
+    sf::Sound sound;
 
 
+    sf::Music music;
+    music.setVolume(20);
+    music.openFromFile("music.ogg");
+    music.play();
 
     sf::Clock clock;
     sf::Time elapsed1 = clock.getElapsedTime();
+    sf::Clock song;
+    sf::Time elapsed2 = song.getElapsedTime();
     bool next = false;
 
 
@@ -54,30 +78,56 @@ int main()
 
     while (window.isOpen())
     {
-
+        elapsed2 = song.getElapsedTime();
         elapsed1 = clock.getElapsedTime();
-        if (elapsed1.asSeconds() > 1)
+        if (elapsed2.asSeconds() > 84)
+        {
+            song.restart();
+            music.play();
+        }
+        if (elapsed1.asSeconds() > 0.5)
         {
             next = gameboard.isempty(sf::Vector2u(40,40), gamemap, 10, 20,current,'s');
 
             if (next)
             {
-                gameboard.stamp(current, gamemap, sf::Vector2u(40,40), 10, 20, clock, elapsed1, window, temp, gameboard, game);
-                gameboard.tetris(gamemap, 10, 20, clock, elapsed1, window, temp, gameboard, game);
+                gameboard.stamp(current, gamemap, sf::Vector2u(40,40), 10, 20, clock, elapsed1, window, temp, gameboard, game, sound, soundstamp);
+                sound.setBuffer(soundstamp);
+                sound.play();
+
+                gameboard.tetris(gamemap, 10, 20, clock, elapsed1, window, temp, gameboard, game, sound, soundtetris);
+
+
 
                 if (gameboard.load("mainmap.png", sf::Vector2u(40, 40), gamemap, 10, 20))
                     std::cout << "\n";
 
                 current = current->next;
-                current->data.movement(sf::Vector2f(-350,-190),'s');
+                if (current->data.gen == 2)
+                {
+                    current->data.movement(sf::Vector2f(-350,-160),'s');
+                }
+                else
+                    current->data.movement(sf::Vector2f(-350,-190),'s');
 
                 delete head;
                 head = current;
                 current->next = new node;
                 temp = current->next;
 
+                if (temp->data.gen == 2)
+                {
+                    temp->data.movement(sf::Vector2f(350,160),'s');
+                }
+                else if (temp->data.gen == 1)
+                {
+                    temp->data.former.scale(0.8f,0.8f);
+                    temp->data.former.translate(235,60);
+                    temp->data.movement(sf::Vector2f(350,190),'s');
+                }
+                else
+                    temp->data.movement(sf::Vector2f(350,190),'s');
 
-                temp->data.movement(sf::Vector2f(350,190),'s');
             }
             else
             {
@@ -132,7 +182,7 @@ int main()
         for(int i=0;i<4;++i)
         {
             window.draw(current->data.block[i]);
-            window.draw(temp->data.block[i]);
+            window.draw(temp->data.block[i],temp->data.former);
         }
         window.draw(game.border);
         window.display();

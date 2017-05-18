@@ -15,7 +15,7 @@ shape::shape()
     color = rand()%4+1;
     sf::Color temporary;
     if (color == 1)
-        temporary = sf::Color::Blue;
+        temporary = sf::Color::Cyan;
     if (color == 2)
         temporary = sf::Color::Green;
     if (color == 3)
@@ -376,9 +376,10 @@ bool TileMap::isempty(sf::Vector2u tileSize, int* tiles, unsigned int width, uns
     return temp;
 }
 
-void TileMap::stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game )
+void TileMap::stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game, sf::Sound sound, sf::SoundBuffer soundstamp)
 {
     sf::Vector2f holder;
+
     for (unsigned int i = 0; i < width; ++i)
             for (unsigned int j = 0; j < height; ++j)
             {
@@ -410,6 +411,7 @@ void TileMap::stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned
 
     if (reset)
     {
+        sound.setBuffer(soundstamp);
         for (int i = height-1; i > -1; --i)
         {
             for (int j = 0; j < width; ++j)
@@ -420,9 +422,11 @@ void TileMap::stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned
             if (gameboard.load("mainmap.png", sf::Vector2u(40, 40), tiles, 10, 20))
             std::cout << "\n";
 
+            sound.play();
+
             clock.restart();
             elapsed1 = clock.getElapsedTime();
-            while (elapsed1.asSeconds() < 0.1 && window.isOpen())
+            while (elapsed1.asSeconds() < 0.05 && window.isOpen())
             {
                 elapsed1 = clock.getElapsedTime();
                 sf::Event event;
@@ -471,14 +475,14 @@ void TileMap::stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned
     }
 }
 
-void TileMap::tetris(int tiles[], unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game)
+void TileMap::tetris(int tiles[], unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game, sf::Sound sound, sf::SoundBuffer soundtetris)
 {
     bool eraser = true;
     bool reassign = false;
     int location[]= {0,0,0,0,};
     int repetitions = 0;
     int r=0;
-
+    sound.setBuffer(soundtetris);
     for (unsigned int i = 0; i < height; ++i)
     {
             for (unsigned int j = 0; j < width; ++j)
@@ -508,6 +512,7 @@ void TileMap::tetris(int tiles[], unsigned int width, unsigned int height, sf::C
 
     if (repetitions)
     {
+        sound.play();
                 while ( elapsed1.asSeconds() < 0.5  && window.isOpen())
                 {
                     elapsed1 = clock.getElapsedTime();
@@ -568,6 +573,7 @@ void TileMap::tetris(int tiles[], unsigned int width, unsigned int height, sf::C
                     {
                         tiles[j + i * width] = 0;
                     }
+
     }
 
     if (reassign)
@@ -589,6 +595,7 @@ void TileMap::tetris(int tiles[], unsigned int width, unsigned int height, sf::C
         {
             tiles[j] = 0;
         }
+
     }
 
 }
