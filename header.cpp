@@ -31,7 +31,7 @@ shape::shape()
 
     position = sf::Vector2f(420,0);
     srand(time(NULL));
-    gen = 1; //rand()%7+1;
+    gen = rand()%7+1;
 
     if (gen==1) //stick
     {
@@ -122,18 +122,6 @@ void shape::rotater()
             block[2].setPosition(sf::Vector2f(temp.x,temp.y+40));
             block[3].setPosition(sf::Vector2f(temp.x,temp.y+80));
             flag = 0;
-        }
-
-
-        for (int i=0;i<4;++i)
-        {
-            currentposition = block[i].getPosition();
-            if (currentposition.x < 260)
-                movement(sf::Vector2f(40,0),'d');
-            if (currentposition.x > 620)
-                movement(sf::Vector2f(-40,0),'a');
-            if (currentposition.y > 800)
-                movement(sf::Vector2f(0,-40),'a');
         }
     }
     if (gen == 3)
@@ -328,4 +316,14 @@ void shape::rotater()
             flag = 0;
         }
     }
+    for (int i=0;i<4;++i)
+        {
+            currentposition = block[i].getPosition();
+            if (currentposition.x < 260)
+                movement(sf::Vector2f(40,0),'d');
+            if (currentposition.x > 620)
+                movement(sf::Vector2f(-40,0),'a');
+            if (currentposition.y > 800)
+                movement(sf::Vector2f(0,-40),'a');
+        }
 }
