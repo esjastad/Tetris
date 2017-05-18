@@ -498,10 +498,10 @@
 	<SFML/Audio/Export.hpp>
 	<string>
 
-1494991715 source:c:\codeblocks\projects\tetris\header.cpp
+1495070135 source:c:\codeblocks\projects\tetris\header.cpp
 	"header.h"
 
-1494991715 c:\codeblocks\projects\tetris\header.h
+1495071708 c:\codeblocks\projects\tetris\header.h
 	<SFML/Graphics.hpp>
 	<iostream>
 	<SFML/Window.hpp>
@@ -509,7 +509,9 @@
 	<string>
 	<sstream>
 	<time.h>
+	<cctype>
+	<cstring>
 
-1494990653 source:c:\codeblocks\projects\tetris\main.cpp
+1495071262 source:c:\codeblocks\projects\tetris\main.cpp
 	"header.h"
 
