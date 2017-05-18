@@ -19,11 +19,11 @@ int main()
         0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,
-        0,1,1,1,1,1,1,1,1,1,
-        0,1,1,1,1,1,1,1,1,1,
-        0,1,1,1,1,1,1,1,1,1,
         0,0,0,0,0,0,0,0,0,0,
-        0,1,1,1,1,1,1,1,1,1,
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
     };
 
     TileMap gameboard;
@@ -62,8 +62,9 @@ int main()
 
             if (next)
             {
-                gameboard.stamp(current, gamemap, sf::Vector2u(40,40), 10, 20);
+                gameboard.stamp(current, gamemap, sf::Vector2u(40,40), 10, 20, clock, elapsed1, window, temp, gameboard, game);
                 gameboard.tetris(gamemap, 10, 20, clock, elapsed1, window, temp, gameboard, game);
+
                 if (gameboard.load("mainmap.png", sf::Vector2u(40, 40), gamemap, 10, 20))
                     std::cout << "\n";
 

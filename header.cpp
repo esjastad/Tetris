@@ -31,7 +31,7 @@ shape::shape()
 
     position = sf::Vector2f(420,0);
     srand(time(NULL));
-    gen = 1;//rand()%7+1;
+    gen = rand()%7+1;
 
     if (gen==1) //stick
     {
@@ -376,7 +376,7 @@ bool TileMap::isempty(sf::Vector2u tileSize, int* tiles, unsigned int width, uns
     return temp;
 }
 
-void TileMap::stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned int width, unsigned int height )
+void TileMap::stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game )
 {
     sf::Vector2f holder;
     for (unsigned int i = 0; i < width; ++i)
@@ -399,10 +399,76 @@ void TileMap::stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned
 
 
                         }
+                        if (holder.y == 0)
+                            reset = true;
+
+
 
                     }
                 }
             }
+
+    if (reset)
+    {
+        for (int i = height-1; i > -1; --i)
+        {
+            for (int j = 0; j < width; ++j)
+            {
+                tiles[j + i * width] = 1;
+            }
+
+            if (gameboard.load("mainmap.png", sf::Vector2u(40, 40), tiles, 10, 20))
+            std::cout << "\n";
+
+            clock.restart();
+            elapsed1 = clock.getElapsedTime();
+            while (elapsed1.asSeconds() < 0.1 && window.isOpen())
+            {
+                elapsed1 = clock.getElapsedTime();
+                sf::Event event;
+                while (window.pollEvent(event))
+                {
+                    if(event.type == sf::Event::Closed)
+                    {
+                    window.close();
+                    }
+                }
+
+
+                window.clear();
+                window.draw(gameboard);
+                window.draw(game.border);
+                window.display();
+            }
+
+        }
+
+        clock.restart();
+        while (elapsed1.asSeconds() < 3 && window.isOpen())
+        {
+            elapsed1 = clock.getElapsedTime();
+            sf::Event event;
+            while (window.pollEvent(event))
+            {
+                if(event.type == sf::Event::Closed)
+                {
+                window.close();
+                }
+            }
+        }
+
+        for (int i = 0; i < height; ++i)
+            for (int j = 0; j < width; ++j)
+            {
+                tiles[j + i * width] = 0;
+            }
+
+        if (gameboard.load("mainmap.png", sf::Vector2u(40, 40), tiles, 10, 20))
+        std::cout << "\n";
+
+        reset=false;
+
+    }
 }
 
 void TileMap::tetris(int tiles[], unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game)
@@ -412,6 +478,7 @@ void TileMap::tetris(int tiles[], unsigned int width, unsigned int height, sf::C
     int location[]= {0,0,0,0,};
     int repetitions = 0;
     int r=0;
+
     for (unsigned int i = 0; i < height; ++i)
     {
             for (unsigned int j = 0; j < width; ++j)

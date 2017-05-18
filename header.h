@@ -44,8 +44,9 @@ struct node
 class TileMap : public sf::Drawable, public sf::Transformable
 {
 public:
+    bool reset= false;
     bool isempty(sf::Vector2u tileSize, int* tiles, unsigned int width, unsigned int height, node * current, char direction);
-    void stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned int width, unsigned int height);
+    void stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game);
     void tetris(int tiles[], unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game);
     bool load(const std::string& tileset, sf::Vector2u tileSize, int* tiles, unsigned int width, unsigned int height)
     {
@@ -103,5 +104,6 @@ private:
 
     sf::VertexArray m_vertices;
     sf::Texture m_tileset;
+
 };
 
