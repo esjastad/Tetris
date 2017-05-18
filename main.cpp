@@ -2,6 +2,34 @@
 
 int main()
 {
+    int gamemap[] =
+    {
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+    };
+
+    TileMap gameboard;
+    if (!gameboard.load("mainmap.png", sf::Vector2u(40, 40), gamemap, 10, 20))
+        return -1;
+    gameboard.setPosition(300,40);
 
     sf::RenderWindow window(sf::VideoMode(1000, 900), "Tilemap");
     background game;
@@ -30,11 +58,16 @@ int main()
         elapsed1 = clock.getElapsedTime();
         if (elapsed1.asSeconds() > 1)
         {
-            next = current->data.movement(sf::Vector2f(0,40),'s');
+            next = gameboard.isempty(sf::Vector2u(40,40), gamemap, 10, 20,current,'s');
+
             if (next)
             {
-                current = current->next;
+                gameboard.stamp(current, gamemap, sf::Vector2u(40,40), 10, 20);
+                gameboard.tetris(gamemap, 10, 20);
+                if (gameboard.load("mainmap.png", sf::Vector2u(40, 40), gamemap, 10, 20))
+                    std::cout << "\n";
 
+                current = current->next;
                 current->data.movement(sf::Vector2f(-350,-190),'s');
 
                 delete head;
@@ -45,9 +78,13 @@ int main()
 
                 temp->data.movement(sf::Vector2f(350,190),'s');
             }
+            else
+            {
+                current->data.movement(sf::Vector2f(0,40),'s');
+            }
             clock.restart();
 
-            std::cout << "\n\n" << current->data.block[0].getPosition().x;
+            //std::cout << "\n\n" << current->data.block[0].getPosition().x << "\t" << current->data.block[0].getPosition().y;
         }
 
         // handle events
@@ -63,15 +100,21 @@ int main()
             {
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
                 {
-                    current->data.movement(sf::Vector2f(0,40),'s');
+                    next = gameboard.isempty(sf::Vector2u(40,40), gamemap, 10, 20,current,'s');
+                    if(!next)
+                        current->data.movement(sf::Vector2f(0,40),'s');
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
                 {
-                    current->data.movement(sf::Vector2f(-40,0),'a');
+                    next = gameboard.isempty(sf::Vector2u(40,40), gamemap, 10, 20,current,'a');
+                    if(!next)
+                        current->data.movement(sf::Vector2f(-40,0),'a');
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
                 {
-                    current->data.movement(sf::Vector2f(40,0),'d');
+                    next = gameboard.isempty(sf::Vector2u(40,40), gamemap, 10, 20,current,'d');
+                    if(!next)
+                        current->data.movement(sf::Vector2f(40,0),'d');
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
                 {
@@ -84,7 +127,7 @@ int main()
 
 
         window.clear();
-
+        window.draw(gameboard);
         for(int i=0;i<4;++i)
         {
             window.draw(current->data.block[i]);

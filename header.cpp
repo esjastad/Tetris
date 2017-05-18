@@ -327,3 +327,132 @@ void shape::rotater()
                 movement(sf::Vector2f(0,-40),'a');
         }
 }
+
+bool TileMap::isempty(sf::Vector2u tileSize, int* tiles, unsigned int width, unsigned int height, node * current, char direction)
+{
+    bool temp = false;
+    sf::Vector2f holder;
+
+    for (unsigned int i = 0; i < width; ++i)
+            for (unsigned int j = 0; j < height; ++j)
+            {
+                // get the current tile number
+                int tileNumber = tiles[i + j * width];
+                if (tileNumber)
+                {
+                    sf::Vertex* quad = &m_vertices[(i + j * width) * 4];
+
+                    quad[0].position = sf::Vector2f((i * tileSize.x), (j * tileSize.y));
+                    for (int k = 0;k<4;++k)
+                    {
+                        holder = current->data.block[k].getPosition();
+
+                        if (direction=='s' && holder.y == quad[0].position.y && holder.x == (quad[0].position.x+260) || holder.y == 800)
+                        {
+                            temp = true;
+                        }
+                        if (direction=='a' && holder.y == (quad[0].position.y + 40) && holder.x == (quad[0].position.x+300))
+                        {
+                            temp = true;
+                        }
+                        if (direction=='d' && holder.y == (quad[0].position.y + 40) && holder.x == (quad[0].position.x + 220))
+                        {
+                            temp = true;
+                        }
+
+                    }
+
+                    //std::cout << "\n" << quad[0].position.x << "\t" << quad[0].position.y;
+                }
+                for (int k = 0;k<4;++k)
+                {
+                    holder = current->data.block[k].getPosition();
+                    if (holder.y == 800 && direction=='s')
+                        temp = true;
+                }
+
+            }
+
+    return temp;
+}
+
+void TileMap::stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned int width, unsigned int height )
+{
+    sf::Vector2f holder;
+    for (unsigned int i = 0; i < width; ++i)
+            for (unsigned int j = 0; j < height; ++j)
+            {
+                // get the current tile number
+                int tileNumber = tiles[i + j * width];
+                if (!tileNumber)
+                {
+                    sf::Vertex* quad = &m_vertices[(i + j * width) * 4];
+
+                    quad[0].position = sf::Vector2f((i * tileSize.x), (j * tileSize.y));
+                    for (int k = 0;k<4;++k)
+                    {
+                        holder = current->data.block[k].getPosition();
+
+                        if (holder.y == (quad[0].position.y + 40) && holder.x == (quad[0].position.x+260))
+                        {
+                            tiles[i + j * width] = 1;
+
+
+                        }
+
+                    }
+                }
+            }
+}
+
+void TileMap::tetris(int tiles[], unsigned int width, unsigned int height)
+{
+    bool eraser = true;
+    bool reassign = false;
+    int location=0;
+    int repetitions = 0;
+    for (unsigned int i = 0; i < height; ++i)
+    {
+            for (unsigned int j = 0; j < width; ++j)
+            {
+                if (tiles[j + i * width] != 1)
+                {
+
+                    eraser = false;
+                }
+            }
+
+            if (eraser)
+            {
+                ++repetitions;
+                reassign = true;
+                location = i;
+                for (unsigned int j = 0; j < width; ++j)
+                {
+                    tiles[j + i * width] = 0;
+                }
+            }
+            eraser = true;
+    }
+    if (reassign)
+    {
+
+        for (int p = 0; p < repetitions;++p)
+        {
+            for (int i = location-1; i > -1; --i)
+            {
+                for (int j = 0; j < width; ++j)
+                {
+                    tiles[j + (i+1)* width] = tiles[j + i * width];
+                }
+            }
+        }
+
+
+        for (int j = 0; j < width; ++j)
+        {
+            tiles[j] = 0;
+        }
+    }
+
+}
