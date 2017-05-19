@@ -61,33 +61,165 @@ int main()
     sf::SoundBuffer specialbuf;
     specialbuf.loadFromFile("special.wav");
 
-    sf::Sound sound;
+    sf::SoundBuffer selection;
+    selection.loadFromFile("select.wav");
 
+    sf::Sound sound;
+    sf::Sound menusound;
+    menusound.setBuffer(selection);
 
     sf::Music music;
     music.setVolume(20);
     music.openFromFile("music.ogg");
-    music.play();
 
+    sf::Clock clock2;
     sf::Clock clock;
+    sf::Time elapsed3 = clock2.getElapsedTime();
     sf::Time elapsed1 = clock.getElapsedTime();
     sf::Clock song;
     sf::Time elapsed2 = song.getElapsedTime();
     bool next = false;
-    bool player = false;
+    bool choice = false;
 
     textmaker mytext;
     mytext.scoret.setPosition(850,350);
     mytext.levelt.setPosition(850,490);
 
+    menumaker difficulty;
+    std::cout << "\n" << difficulty.middle.getLocalBounds().width << "\t" << difficulty.middle.getLocalBounds().height;
     while (window.isOpen())
     {
-        if (player)
+        sf::Event event;
+        sf::Vector2i localPosition;
+        while (window.isOpen() && difficulty.flag == true)
         {
-            music.play();
-            player = false;
-        }
 
+            while (window.pollEvent(event))
+            {
+                if(event.type == sf::Event::Closed)
+                {
+                    window.close();
+                }
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                {
+                    localPosition = sf::Mouse::getPosition(window);
+                    if (localPosition.y < 529 && localPosition.y > 471 && localPosition.x < 582 && localPosition.x > 418)
+                    {
+                        menusound.play();
+                        mytext.level = 8;
+                        mytext.valuechange(false);
+                        choice = false;
+                        song.restart();
+
+                    }
+                    if (localPosition.y < 430 && localPosition.y > 370 && localPosition.x < 640 && localPosition.x > 360)
+                    {
+                        menusound.play();
+                        mytext.level = 4;
+                        mytext.valuechange(false);
+                        choice = false;
+                        song.restart();
+
+                    }
+                    if (localPosition.y < 337 && localPosition.y > 263 && localPosition.x < 587 && localPosition.x > 413)
+                    {
+                        menusound.play();
+                        mytext.level = 1;
+                        mytext.valuechange(false);
+                        choice = false;
+                        song.restart();
+
+                    }
+
+                }
+
+            }
+
+            if (!choice)
+            {
+                elapsed3 = clock2.getElapsedTime();
+                elapsed1 = clock.getElapsedTime();
+                elapsed2 = song.getElapsedTime();
+                if (localPosition.y < 529 && localPosition.y > 471 && localPosition.x < 582 && localPosition.x > 418)
+                {
+                    if (elapsed1.asSeconds() > .1)
+                    {
+                        difficulty.bot.setColor(sf::Color::Red);
+                        clock2.restart();
+                    }
+                    if (elapsed3.asSeconds() < .1 && elapsed1.asSeconds() > .2)
+                    {
+                        difficulty.bot.setColor(sf::Color::White);
+                        clock.restart();
+                    }
+                    if (elapsed2.asSeconds() > 1)
+                    {
+                        choice = true;
+                        song.restart();
+                        music.play();
+                        difficulty.flag=false;
+                    }
+
+                }
+                if (localPosition.y < 430 && localPosition.y > 370 && localPosition.x < 640 && localPosition.x > 360)
+                {
+                    if (elapsed1.asSeconds() > .1)
+                    {
+                        difficulty.middle.setColor(sf::Color::Red);
+                        clock2.restart();
+                    }
+                    if (elapsed3.asSeconds() < .1 && elapsed1.asSeconds() > .2)
+                    {
+                        difficulty.middle.setColor(sf::Color::White);
+                        clock.restart();
+                    }
+                    if (elapsed2.asSeconds() > 1)
+                    {
+                        choice = true;
+                        song.restart();
+                        music.play();
+                        difficulty.flag=false;
+                    }
+
+                }
+                if (localPosition.y < 337 && localPosition.y > 263 && localPosition.x < 587 && localPosition.x > 413)
+                {
+                    if (elapsed1.asSeconds() > .1)
+                    {
+                        difficulty.top.setColor(sf::Color::Red);
+                        clock2.restart();
+                    }
+                    if (elapsed3.asSeconds() < .1 && elapsed1.asSeconds() > .2)
+                    {
+                        difficulty.top.setColor(sf::Color::White);
+                        clock.restart();
+                    }
+                    if (elapsed2.asSeconds() > 1)
+                    {
+                        choice = true;
+                        song.restart();
+                        music.play();
+                        difficulty.flag=false;
+                    }
+
+                }
+
+
+
+            }
+
+            window.clear();
+            window.draw(game.border);
+            window.draw(difficulty.bot);
+            window.draw(difficulty.middle);
+            window.draw(difficulty.top);
+            window.display();
+
+
+        }
+        difficulty.bot.setColor(sf::Color::White);
+        difficulty.middle.setColor(sf::Color::White);
+        difficulty.top.setColor(sf::Color::White);
         if(mytext.level == 1)
             mytext.speed = 1;
         if (mytext.score > (mytext.prevscore+10000))
@@ -110,7 +242,7 @@ int main()
             {
                 mytext.score = mytext.score + 100;
                 mytext.valuechange(true);
-                player = gameboard.stamp(current, gamemap, sf::Vector2u(40,40), 10, 20, clock, elapsed1, window, temp, gameboard, game, sound, soundstamp,mytext,music);
+                difficulty.flag = gameboard.stamp(current, gamemap, sf::Vector2u(40,40), 10, 20, clock, elapsed1, window, temp, gameboard, game, sound, soundstamp,mytext,music);
                 sound.setBuffer(soundstamp);
                 sound.play();
 
@@ -158,7 +290,7 @@ int main()
         }
 
         // handle events
-        sf::Event event;
+
         while (window.pollEvent(event))
         {
             if(event.type == sf::Event::Closed)
@@ -207,6 +339,7 @@ int main()
         window.draw(mytext.scoret);
         window.draw(mytext.levelt);
         window.display();
+
     }
 
 

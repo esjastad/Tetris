@@ -7,6 +7,27 @@ menumaker::menumaker()
     bot.setString("Hard");
     bot.setCharacterSize(80);
     bot.setColor(sf::Color::White);
+    bot.setStyle(sf::Text::Bold);
+    bot.setOrigin((bot.getLocalBounds().width/2),(bot.getLocalBounds().height/2));
+    bot.setPosition(500,500);
+
+    top.setFont(font);
+    top.setString("Easy");
+    top.setCharacterSize(80);
+    top.setColor(sf::Color::White);
+    top.setStyle(sf::Text::Bold);
+    top.setOrigin((top.getLocalBounds().width/2),(top.getLocalBounds().height/2));
+    top.setPosition(500,300);
+
+    middle.setFont(font);
+    middle.setString("Medium");
+    middle.setCharacterSize(80);
+    middle.setColor(sf::Color::White);
+    middle.setStyle(sf::Text::Bold);
+    middle.setOrigin((middle.getLocalBounds().width/2),(middle.getLocalBounds().height/2));
+    middle.setPosition(500,400);
+
+    flag = true;
 }
 
 textmaker::textmaker()
@@ -469,7 +490,11 @@ bool TileMap::stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned
         mytext.level = 1;
         mytext.speed = (1.50/mytext.level);
         mytext.prevscore = 0;
-
+        sf::SoundBuffer lost;
+        sf::Sound gameover;
+        lost.loadFromFile("over.wav");
+        gameover.setBuffer(lost);
+        gameover.play();
 
         sound.setBuffer(soundstamp);
         for (int i = height-1; i > -1; --i)

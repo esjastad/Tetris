@@ -16,7 +16,7 @@ public:
     sf::Text top;
     sf::Text middle;
     sf::Text bot;
-
+    bool flag;
 private:
     sf::Font font;
 };
