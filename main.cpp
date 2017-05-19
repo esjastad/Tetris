@@ -74,6 +74,7 @@ int main()
     sf::Clock song;
     sf::Time elapsed2 = song.getElapsedTime();
     bool next = false;
+    bool player = false;
 
     textmaker mytext;
     mytext.scoret.setPosition(850,350);
@@ -81,6 +82,12 @@ int main()
 
     while (window.isOpen())
     {
+        if (player)
+        {
+            music.play();
+            player = false;
+        }
+
         if(mytext.level == 1)
             mytext.speed = 1;
         if (mytext.score > (mytext.prevscore+10000))
@@ -103,7 +110,7 @@ int main()
             {
                 mytext.score = mytext.score + 100;
                 mytext.valuechange(true);
-                gameboard.stamp(current, gamemap, sf::Vector2u(40,40), 10, 20, clock, elapsed1, window, temp, gameboard, game, sound, soundstamp,mytext);
+                player = gameboard.stamp(current, gamemap, sf::Vector2u(40,40), 10, 20, clock, elapsed1, window, temp, gameboard, game, sound, soundstamp,mytext,music);
                 sound.setBuffer(soundstamp);
                 sound.play();
 

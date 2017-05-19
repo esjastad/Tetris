@@ -429,7 +429,7 @@ bool TileMap::isempty(sf::Vector2u tileSize, int* tiles, unsigned int width, uns
     return temp;
 }
 
-void TileMap::stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game, sf::Sound sound, sf::SoundBuffer soundstamp, textmaker & mytext)
+bool TileMap::stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game, sf::Sound sound, sf::SoundBuffer soundstamp, textmaker & mytext, sf::Music & music)
 {
     sf::Vector2f holder;
 
@@ -464,6 +464,7 @@ void TileMap::stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned
 
     if (reset)
     {
+        music.stop();
         mytext.score = 0;
         mytext.level = 1;
         mytext.speed = (1.50/mytext.level);
@@ -534,7 +535,9 @@ void TileMap::stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned
         reset=false;
         mytext.valuechange(true);
         mytext.valuechange(false);
+        return true;
     }
+    return false;
 }
 
 void TileMap::tetris(int tiles[], unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game, sf::Sound sound, sf::SoundBuffer soundtetris, textmaker & mytext, sf::SoundBuffer specialbuf)
