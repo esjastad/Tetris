@@ -58,6 +58,9 @@ int main()
     sf::SoundBuffer soundstamp;
     soundstamp.loadFromFile("stamp.wav");
 
+    sf::SoundBuffer specialbuf;
+    specialbuf.loadFromFile("special.wav");
+
     sf::Sound sound;
 
 
@@ -104,7 +107,7 @@ int main()
                 sound.setBuffer(soundstamp);
                 sound.play();
 
-                gameboard.tetris(gamemap, 10, 20, clock, elapsed1, window, temp, gameboard, game, sound, soundtetris, mytext);
+                gameboard.tetris(gamemap, 10, 20, clock, elapsed1, window, temp, gameboard, game, sound, soundtetris, mytext, specialbuf);
 
 
 

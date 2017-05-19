@@ -1,5 +1,14 @@
 #include "header.h"
 
+menumaker::menumaker()
+{
+    font.loadFromFile("arial.ttf");
+    bot.setFont(font);
+    bot.setString("Hard");
+    bot.setCharacterSize(80);
+    bot.setColor(sf::Color::White);
+}
+
 textmaker::textmaker()
 {
     font.loadFromFile("arial.ttf");
@@ -459,8 +468,7 @@ void TileMap::stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned
         mytext.level = 1;
         mytext.speed = (1.50/mytext.level);
         mytext.prevscore = 0;
-        mytext.valuechange(true);
-        mytext.valuechange(false);
+
 
         sound.setBuffer(soundstamp);
         for (int i = height-1; i > -1; --i)
@@ -493,6 +501,8 @@ void TileMap::stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned
                 window.clear();
                 window.draw(gameboard);
                 window.draw(game.border);
+                window.draw(mytext.scoret);
+                window.draw(mytext.levelt);
                 window.display();
             }
 
@@ -522,11 +532,12 @@ void TileMap::stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned
         std::cout << "\n";
 
         reset=false;
-
+        mytext.valuechange(true);
+        mytext.valuechange(false);
     }
 }
 
-void TileMap::tetris(int tiles[], unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game, sf::Sound sound, sf::SoundBuffer soundtetris, textmaker & mytext)
+void TileMap::tetris(int tiles[], unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game, sf::Sound sound, sf::SoundBuffer soundtetris, textmaker & mytext, sf::SoundBuffer specialbuf)
 {
     bool eraser = true;
     bool reassign = false;
@@ -534,6 +545,8 @@ void TileMap::tetris(int tiles[], unsigned int width, unsigned int height, sf::C
     int repetitions = 0;
     int r=0;
     sound.setBuffer(soundtetris);
+    sf::Sound special;
+    special.setBuffer(specialbuf);
     for (unsigned int i = 0; i < height; ++i)
     {
             for (unsigned int j = 0; j < width; ++j)
@@ -549,9 +562,11 @@ void TileMap::tetris(int tiles[], unsigned int width, unsigned int height, sf::C
             {
                 location[repetitions] = i;
                 ++repetitions;
-                mytext.score = mytext.score + 1000;
+                mytext.score = mytext.score + (1000 * repetitions);
                 if (repetitions == 4)
-                    mytext.score = mytext.score + 2000;
+                {
+                    special.play();
+                }
 
                 reassign = true;
             }
@@ -568,7 +583,8 @@ void TileMap::tetris(int tiles[], unsigned int width, unsigned int height, sf::C
     if (repetitions)
     {
         mytext.valuechange(true);
-        sound.play();
+        if (repetitions!=4)
+            sound.play();
                 while ( elapsed1.asSeconds() < 0.5  && window.isOpen())
                 {
                     elapsed1 = clock.getElapsedTime();

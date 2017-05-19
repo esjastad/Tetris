@@ -9,6 +9,18 @@
 #include <cstring>
 #include <sstream>
 
+class menumaker
+{
+public:
+    menumaker();
+    sf::Text top;
+    sf::Text middle;
+    sf::Text bot;
+
+private:
+    sf::Font font;
+};
+
 class textmaker
 {
 public:
@@ -66,7 +78,7 @@ public:
     bool reset= false;
     bool isempty(sf::Vector2u tileSize, int* tiles, unsigned int width, unsigned int height, node * current, char direction);
     void stamp(node * current, int tiles[], sf::Vector2u tileSize, unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game, sf::Sound sound, sf::SoundBuffer soundstamp, textmaker & mytext);
-    void tetris(int tiles[], unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game, sf::Sound sound, sf::SoundBuffer soundtetris, textmaker & mytext);
+    void tetris(int tiles[], unsigned int width, unsigned int height, sf::Clock clock, sf::Time elapsed1, sf::RenderWindow & window, node * temp, TileMap gameboard, background game, sf::Sound sound, sf::SoundBuffer soundtetris, textmaker & mytext, sf::SoundBuffer specialbuf);
     bool load(const std::string& tileset, sf::Vector2u tileSize, int* tiles, unsigned int width, unsigned int height)
     {
         // load the tileset texture
@@ -125,5 +137,6 @@ private:
     sf::Texture m_tileset;
 
 };
+
 
 
